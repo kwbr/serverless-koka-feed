@@ -2,6 +2,7 @@ service: koka-feed
 
 provider:
   name: aws
+  region: eu-central-1
   runtime: python2.7
   memorySize: 128
 
