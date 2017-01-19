@@ -1,0 +1,14 @@
+service: koka-feed
+
+provider:
+  name: aws
+  runtime: python2.7
+  memorySize: 128
+
+functions:
+  feed:
+    handler: handler.get_feed
+    events:
+      - http:
+          path: feed
+          method: get

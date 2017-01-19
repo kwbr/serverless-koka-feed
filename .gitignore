@@ -1,0 +1,7 @@
+# virtualenvs
+venv
+nenv
+
+# Serverless
+.serverless
+vendored
