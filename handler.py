@@ -1,4 +1,5 @@
-import sys, os
+import sys
+import os
 
 here = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(here, "./vendored"))
@@ -16,6 +17,7 @@ log.setLevel(logging.DEBUG)
 
 url = "http://www.koka36.de/neu_im_vorverkauf.php"
 
+
 def make_external(url):
     return urlparse.urljoin("http://www.koka36.de", url)
 
@@ -32,23 +34,33 @@ def get_feed(event, context):
 
         title = data.find('p').string
         description = data.find_all('div')[-1].string
-        image = make_external(data.find('img').get('src'))
         link = make_external(event.find('a').get('href'))
 
         if title:
             item = PyRSS2Gen.RSSItem(
-                    title = title,
-                    link = link,
-                    description = description,
-                    guid = PyRSS2Gen.Guid(link))
+                    title=title,
+                    link=link,
+                    description=description,
+                    guid=PyRSS2Gen.Guid(link))
 
             items.append(item)
 
     rss = PyRSS2Gen.RSS2(
-            title = "Neu im Vorverkauf",
-            link = "http://www.koka36.de/",
-            description = "Generated using bs4, PyRSS2Gen",
-            lastBuildDate = datetime.datetime.utcnow(),
-            items = items)
+            title="Neu im Vorverkauf",
+            link="http://www.koka36.de/",
+            description="Generated using bs4, PyRSS2Gen",
+            lastBuildDate=datetime.datetime.utcnow(),
+            items=items)
 
-    return rss.to_xml()
+    headers = {
+        "Content-Type": "application/xml+atom"
+    }
+
+    response = {
+        "headers": headers,
+        "statusCode": 200,
+        "body": rss.to_xml().encode('utf-8')
+    }
+
+    return response
+
